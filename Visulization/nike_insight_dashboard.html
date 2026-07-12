@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nike sales analysis — insight dashboard</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f1efe8;
+    color: #0b0b0b;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px 20px 60px; }
+  header { margin-bottom: 20px; }
+  header h1 { font-size: 22px; font-weight: 500; margin: 0 0 4px; }
+  header p { font-size: 13px; color: #52514e; margin: 0; }
+  nav {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    border-bottom: 0.5px solid #d3d1c7; margin-bottom: 24px; padding-bottom: 12px;
+  }
+  nav button {
+    font-size: 13px; padding: 8px 14px; border-radius: 8px; border: 0.5px solid #d3d1c7;
+    background: #fcfcfb; color: #52514e; cursor: pointer; font-family: inherit;
+  }
+  nav button.active { background: #0b0b0b; color: #fff; border-color: #0b0b0b; }
+  .tab { display: none; }
+  .tab.active { display: block; }
+  .card {
+    background: #fcfcfb; border: 0.5px solid #e1e0d9; border-radius: 12px;
+    padding: 20px 22px; margin-bottom: 18px;
+  }
+  .card h2 { font-size: 16px; font-weight: 500; margin: 0 0 4px; }
+  .card .sub { font-size: 13px; color: #898781; margin: 0 0 16px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 18px; }
+  .kpi { background: #fcfcfb; border: 0.5px solid #e1e0d9; border-radius: 10px; padding: 14px 16px; }
+  .kpi .label { font-size: 12px; color: #898781; margin-bottom: 6px; }
+  .kpi .value { font-size: 22px; font-weight: 500; }
+  .kpi .delta { font-size: 12px; margin-top: 4px; }
+  .up { color: #27500a; } .down { color: #791f1f; } .flat { color: #52514e; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 700px) { .grid2 { grid-template-columns: 1fr; } }
+  .chartbox { position: relative; width: 100%; height: 280px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: #52514e; margin-bottom: 10px; }
+  .legend span.sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 5px; vertical-align: -1px; }
+  .insight {
+    font-size: 13px; color: #444441; background: #f1efe8; border-radius: 8px;
+    padding: 10px 14px; margin-top: 12px; line-height: 1.6;
+  }
+  .insight b { font-weight: 500; color: #0b0b0b; }
+  ol.reco { padding-left: 20px; font-size: 14px; line-height: 1.8; color: #2c2c2a; }
+  ol.reco li { margin-bottom: 10px; }
+  ol.reco b { font-weight: 500; }
+  .flag {
+    font-size: 13px; color: #633806; background: #faeeda; border-radius: 8px;
+    padding: 10px 14px; margin-bottom: 18px; line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Nike sales analysis — insight dashboard</h1>
+    <p>619 monthly records &middot; Jan 2021&ndash;Dec 2023 &middot; 4 products &times; 4 regions &times; 2 channels</p>
+  </header>
+
+  <nav id="nav"></nav>
+
+  <div id="tabs"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+Chart.defaults.color = '#52514e';
+
+const COLOR = { blue:'#2a78d6', aqua:'#1baf7a', amber:'#eda100', red:'#e34948', violet:'#4a3aa7', orange:'#eb6834', gray:'#888780' };
+
+const TABS = [
+  { id: 'overview', label: 'Executive overview' },
+  { id: 'cycle', label: 'Boom-bust cycle' },
+  { id: 'regional', label: 'Regional divergence' },
+  { id: 'channel', label: 'Channel shift' },
+  { id: 'margin', label: 'Margin resilience' },
+  { id: 'sentiment', label: 'Sentiment vs demand' },
+  { id: 'reco', label: 'Recommendations' },
+];
+
+const nav = document.getElementById('nav');
+const tabsEl = document.getElementById('tabs');
+TABS.forEach((t, i) => {
+  const b = document.createElement('button');
+  b.textContent = t.label;
+  b.dataset.tab = t.id;
+  if (i === 0) b.classList.add('active');
+  b.onclick = () => switchTab(t.id);
+  nav.appendChild(b);
+});
+
+function switchTab(id) {
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+  document.querySelectorAll('.tab').forEach(el => el.classList.toggle('active', el.id === 'tab-' + id));
+}
+
+tabsEl.innerHTML = `
+<section id="tab-overview" class="tab active">
+  <div class="flag">Note: absolute volumes in this dataset (hundreds of millions of units per row) exceed real-world Nike scale, so figures below are best read as proportional comparisons across products, regions, and channels rather than literal totals.</div>
+  <div class="kpis">
+    <div class="kpi"><div class="label">Total revenue (3yr)</div><div class="value">$2.80T</div><div class="delta flat">Avg margin 36.4%</div></div>
+    <div class="kpi"><div class="label">2022 vs 2021</div><div class="value up">+8.4%</div><div class="delta up">Broad-based boom</div></div>
+    <div class="kpi"><div class="label">2023 vs 2022</div><div class="value down">-12.1%</div><div class="delta down">Sharp reversal</div></div>
+    <div class="kpi"><div class="label">DTC share, 2023</div><div class="value">61.7%</div><div class="delta up">Up from 57.1% in 2021</div></div>
+  </div>
+  <div class="card">
+    <h2>Annual revenue, 2021&ndash;2023</h2>
+    <p class="sub">The topline number hides a spike-and-reversal, not a steady trend</p>
+    <div class="chartbox"><canvas id="ovChart" role="img" aria-label="Bar chart of annual revenue: 2021 921 billion dollars, 2022 998 billion dollars, 2023 878 billion dollars">Annual revenue: 2021 $921.4B, 2022 $998.4B, 2023 $878.0B</canvas></div>
+    <div class="insight"><b>Six things stand out this year:</b> a 2022 boom that fully reversed in 2023, Basketball Shoes &times; North America driving the swing, Greater China in structural decline both years, Direct-to-Consumer steadily gaining share, margin quietly improving despite the revenue drop, and customer ratings rising even as price/marketing show no measurable effect on volume. Each is broken out in the tabs above.</div>
+  </div>
+</section>
+
+<section id="tab-cycle" class="tab">
+  <div class="card">
+    <h2>Quarterly revenue, Q1 2021&ndash;Q4 2023</h2>
+    <p class="sub">A synchronized rise-and-fall, peaking Q1 2022 and troughing Q1 2023</p>
+    <div class="chartbox"><canvas id="qChart" role="img" aria-label="Line chart of quarterly revenue in billions of dollars, peaking at 291 billion in Q1 2022 and dropping to 182 billion in Q1 2023">Quarterly revenue billions: 224.8, 204.4, 229.9, 262.2, 291.2, 267.8, 198.6, 240.7, 182.2, 206.2, 250.8, 238.8</canvas></div>
+    <div class="insight"><b>Why this matters:</b> revenue didn't erode gradually &mdash; it round-tripped. The 2023 "decline" is largely the unwinding of an unusually strong 2022, not a new structural weakness on its own.</div>
+  </div>
+  <div class="card">
+    <h2>Which products/regions swung hardest, 2022 &rarr; 2023 (%)</h2>
+    <p class="sub">Basketball Shoes and North America amplify the cycle far more than the average</p>
+    <div class="chartbox"><canvas id="swingChart" role="img" aria-label="Bar chart of year over year percent change from 2022 to 2023: Basketball Shoes down 23.4 percent, North America down 25 percent, Basketball Shoes in North America down 32.1 percent, versus total company down 12.1 percent">YoY change 2022 to 2023: Total company -12.1%, Basketball Shoes -23.4%, North America -25.0%, Basketball x North America -32.1%</canvas></div>
+    <div class="insight"><b>Basketball Shoes &times; North America</b> swung +17.5% then -32.1% &mdash; a wider range than either factor alone, making this specific combination the highest-leverage segment behind the overall cycle.</div>
+  </div>
+</section>
+
+<section id="tab-regional" class="tab">
+  <div class="card">
+    <h2>Revenue by region, 2021&ndash;2023 ($B)</h2>
+    <p class="sub">Every region rose then fell &mdash; except Greater China, which only fell</p>
+    <div class="legend">
+      <span><span class="sw" style="background:${COLOR.blue}"></span>North America</span>
+      <span><span class="sw" style="background:${COLOR.aqua}"></span>Europe</span>
+      <span><span class="sw" style="background:${COLOR.red}"></span>Greater China</span>
+      <span><span class="sw" style="background:${COLOR.amber}"></span>Asia Pacific &amp; LatAm</span>
+    </div>
+    <div class="chartbox"><canvas id="regChart" role="img" aria-label="Line chart of revenue by region from 2021 to 2023. North America and Asia Pacific rise then fall. Europe declines slightly each year. Greater China declines both years without ever rising.">Region revenue by year in billions: North America 273.1, 339.5, 254.7. Europe 256.0, 234.7, 224.4. Greater China 230.0, 204.3, 188.3. Asia Pacific and Latin America 162.4, 219.8, 210.5.</canvas></div>
+    <div class="insight"><b>Greater China is structurally different:</b> down 11.2% in 2022 and a further 7.8% in 2023 &mdash; it never joined the 2022 boom, unlike every other region. This points to a persistent regional issue rather than a cyclical one.</div>
+  </div>
+</section>
+
+<section id="tab-channel" class="tab">
+  <div class="card">
+    <h2>Revenue share by channel, 2021&ndash;2023</h2>
+    <p class="sub">Direct-to-Consumer gained share every year, including through the 2023 downturn</p>
+    <div class="chartbox"><canvas id="chanChart" role="img" aria-label="Stacked bar chart of channel revenue share by year. Direct to Consumer grows from 57.1 percent in 2021 to 56.1 percent in 2022 to 61.7 percent in 2023, with Wholesale making up the remainder.">Channel share by year: 2021 DTC 57.1% Wholesale 42.9%. 2022 DTC 56.1% Wholesale 43.9%. 2023 DTC 61.7% Wholesale 38.3%.</canvas></div>
+    <div class="insight"><b>This is a structural shift, not a cyclical one:</b> most channel mixes stall or reverse in a downturn. Here DTC share jumped its most in the worst revenue year (2023), suggesting a deliberate or resilient shift toward higher-margin direct sales.</div>
+  </div>
+</section>
+
+<section id="tab-margin" class="tab">
+  <div class="grid2">
+    <div class="card">
+      <h2>Total revenue vs. blended margin</h2>
+      <p class="sub">Margin held steady even as revenue fell</p>
+      <div class="chartbox"><canvas id="marginRevChart" role="img" aria-label="Bar chart of annual revenue in billions: 921 in 2021, 998 in 2022, 878 in 2023, showing a rise then fall">Revenue by year billions: 921.4, 998.4, 878.0</canvas></div>
+    </div>
+    <div class="card">
+      <h2>Blended profit margin by year</h2>
+      <p class="sub">Rose slightly every year, decoupled from revenue swings</p>
+      <div class="chartbox"><canvas id="marginPctChart" role="img" aria-label="Line chart of blended profit margin percent by year: 34.99 percent in 2021, 35.05 percent in 2022, 35.22 percent in 2023, a steady rise despite revenue falling in 2023">Margin by year: 34.99%, 35.05%, 35.22%</canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Profit margin by product, 2021&ndash;2023</h2>
+    <p class="sub">Basketball Shoes is pulling further ahead on margin quality, not just size</p>
+    <div class="legend">
+      <span><span class="sw" style="background:${COLOR.blue}"></span>Basketball Shoes</span>
+      <span><span class="sw" style="background:${COLOR.aqua}"></span>Running Shoes</span>
+      <span><span class="sw" style="background:${COLOR.amber}"></span>Athletic Apparel</span>
+      <span><span class="sw" style="background:${COLOR.gray}"></span>Accessories</span>
+    </div>
+    <div class="chartbox"><canvas id="prodMarginChart" role="img" aria-label="Line chart of profit margin percent by product from 2021 to 2023. Basketball Shoes rises from 36.4 percent to 37.4 percent. Accessories stays flat around 32 percent, the lowest of all four products.">Product margin by year: Basketball Shoes 36.36, 37.21, 37.36. Running Shoes 37.11, 36.26, 37.12. Athletic Apparel 34.72, 34.52, 34.49. Accessories 32.12, 31.89, 32.08.</canvas></div>
+    <div class="insight"><b>Widening gap:</b> Basketball Shoes' margin advantage over Accessories grew from 4.2 points (2021) to 5.3 points (2023) &mdash; the highest-revenue product is also becoming the most efficient one.</div>
+  </div>
+</section>
+
+<section id="tab-sentiment" class="tab">
+  <div class="grid2">
+    <div class="card">
+      <h2>Customer rating by year</h2>
+      <p class="sub">Rising steadily &mdash; and moving independently of revenue</p>
+      <div class="chartbox"><canvas id="ratingChart" role="img" aria-label="Line chart of average customer rating out of 5 by year: 4.16 in 2021, 4.19 in 2022, 4.21 in 2023, a steady increase">Rating by year: 4.156, 4.193, 4.208</canvas></div>
+    </div>
+    <div class="card">
+      <h2>Unit price vs. units sold</h2>
+      <p class="sub">Scatter of 150 records &mdash; essentially no relationship (r &asymp; 0.0002)</p>
+      <div class="chartbox"><canvas id="scatterPrice" role="img" aria-label="Scatter plot of unit price against units sold showing no visible correlation, points scattered randomly across all price levels and volumes">Scatter of unit price versus units sold shows no correlation, r approximately 0.0002</canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Marketing spend vs. units sold</h2>
+    <p class="sub">Scatter of 150 records &mdash; again no relationship (r &asymp; -0.02)</p>
+    <div class="chartbox"><canvas id="scatterMkt" role="img" aria-label="Scatter plot of marketing spend per unit against units sold showing no visible correlation, points scattered randomly">Scatter of marketing spend versus units sold shows no correlation, r approximately -0.02</canvas></div>
+    <div class="insight"><b>The most counter-intuitive finding in the dataset:</b> neither price nor marketing spend measurably moves volume here. In real retail data at least a weak relationship is expected. Combined with rating rising independently of revenue, this suggests sales volume in this dataset is driven by factors outside the columns provided &mdash; worth a flag on data realism as much as a business insight.</div>
+  </div>
+</section>
+
+<section id="tab-reco" class="tab">
+  <div class="card">
+    <h2>Recommendations</h2>
+    <p class="sub">Prioritized by where the evidence is strongest</p>
+    <ol class="reco">
+      <li><b>Investigate the Basketball Shoes &times; North America spike before reacting to the 2023 dip.</b> Its 2022 surge (+17.5%) was steeper than any other segment's, and its 2023 pullback (-32.1%) is the main reason total revenue looks weak. Confirm whether 2022 reflected a one-off demand event (launch, promotion) before treating 2023 as a decline to fix.</li>
+      <li><b>Treat Greater China as a separate, structural problem, not part of the broader cycle.</b> It's the only region that never grew, declining in both 2022 and 2023. It likely needs a distinct regional strategy review rather than waiting for a "market recovery" that other regions are already experiencing.</li>
+      <li><b>Lean further into Direct-to-Consumer.</b> DTC carries an 8.7-point margin advantage over Wholesale and is the one growth line that held up through the downturn. The 2023 share jump (56%&rarr;62%) suggests this shift is already working &mdash; formalizing it as a stated priority could compound the benefit.</li>
+      <li><b>Protect the margin discipline already in place.</b> Margin rose every year despite volume swings, meaning pricing and cost control are functioning well independent of demand. Any recovery plan should avoid trading this margin gain away to chase 2022-level volume.</li>
+      <li><b>Don't rely on price cuts or marketing spend increases to drive volume recovery.</b> Neither shows a measurable relationship with units sold in this data. If the real business behaves similarly, volume likely responds to different levers (product launches, availability, seasonality) &mdash; worth testing directly rather than assuming a price/marketing lever will work.</li>
+      <li><b>Reinvest in what's working for Basketball Shoes' margin trajectory.</b> Its margin advantage over Accessories widened every year. Understanding what's driving that (mix, cost efficiency, pricing power) could be a template for lifting Accessories, currently the flattest and lowest-margin line.</li>
+    </ol>
+  </div>
+</section>
+`;
+
+function baseLine(canvasId, labels, series) {
+  return new Chart(document.getElementById(canvasId), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: series.map(s => ({
+        label: s.label, data: s.data, borderColor: s.color,
+        backgroundColor: s.color + '1a', fill: s.fill || false,
+        tension: 0.3, pointRadius: 4, pointBackgroundColor: s.color, borderWidth: 2,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { grid: { color: '#e1e0d9' }, ticks: { callback: s => s } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+new Chart(document.getElementById('ovChart'), {
+  type: 'bar',
+  data: { labels: ['2021','2022','2023'], datasets: [{ data: [921.4, 998.4, 878.0], backgroundColor: [COLOR.blue, COLOR.aqua, COLOR.red], borderRadius: 4, maxBarThickness: 70 }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+    scales: { y: { ticks: { callback: v => '$' + v + 'B' }, grid: { color: '#e1e0d9' } }, x: { grid: { display: false } } } }
+});
+
+baseLine('qChart', ['Q1 21','Q2 21','Q3 21','Q4 21','Q1 22','Q2 22','Q3 22','Q4 22','Q1 23','Q2 23','Q3 23','Q4 23'],
+  [{ label: 'Revenue', data: [224.8,204.4,229.9,262.2,291.2,267.8,198.6,240.7,182.2,206.2,250.8,238.8], color: COLOR.blue, fill: true }]);
+
+new Chart(document.getElementById('swingChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Total company','Basketball Shoes','North America','Basketball x North America'],
+    datasets: [{ data: [-12.1, -23.4, -25.0, -32.1], backgroundColor: [COLOR.gray, COLOR.amber, COLOR.amber, COLOR.red], borderRadius: 4, maxBarThickness: 40 }]
+  },
+  options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+    scales: { x: { ticks: { callback: v => v + '%' }, grid: { color: '#e1e0d9' } }, y: { grid: { display: false } } } }
+});
+
+baseLine('regChart', ['2021','2022','2023'], [
+  { label: 'North America', data: [273.1, 339.5, 254.7], color: COLOR.blue },
+  { label: 'Europe', data: [256.0, 234.7, 224.4], color: COLOR.aqua },
+  { label: 'Greater China', data: [230.0, 204.3, 188.3], color: COLOR.red },
+  { label: 'Asia Pacific & LatAm', data: [162.4, 219.8, 210.5], color: COLOR.amber },
+]);
+
+new Chart(document.getElementById('chanChart'), {
+  type: 'bar',
+  data: {
+    labels: ['2021','2022','2023'],
+    datasets: [
+      { label: 'Direct to Consumer', data: [57.1, 56.1, 61.7], backgroundColor: COLOR.blue, stack: 's' },
+      { label: 'Wholesale', data: [42.9, 43.9, 38.3], backgroundColor: COLOR.gray, stack: 's' },
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+    scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, ticks: { callback: v => v + '%' }, grid: { color: '#e1e0d9' } } } }
+});
+
+new Chart(document.getElementById('marginRevChart'), {
+  type: 'bar',
+  data: { labels: ['2021','2022','2023'], datasets: [{ data: [921.4, 998.4, 878.0], backgroundColor: COLOR.blue, borderRadius: 4, maxBarThickness: 60 }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+    scales: { y: { ticks: { callback: v => '$' + v + 'B' }, grid: { color: '#e1e0d9' } }, x: { grid: { display: false } } } }
+});
+
+baseLine('marginPctChart', ['2021','2022','2023'], [{ label: 'Margin', data: [34.99, 35.05, 35.22], color: COLOR.aqua, fill: true }]);
+
+baseLine('prodMarginChart', ['2021','2022','2023'], [
+  { label: 'Basketball Shoes', data: [36.36, 37.21, 37.36], color: COLOR.blue },
+  { label: 'Running Shoes', data: [37.11, 36.26, 37.12], color: COLOR.aqua },
+  { label: 'Athletic Apparel', data: [34.72, 34.52, 34.49], color: COLOR.amber },
+  { label: 'Accessories', data: [32.12, 31.89, 32.08], color: COLOR.gray },
+]);
+
+baseLine('ratingChart', ['2021','2022','2023'], [{ label: 'Rating', data: [4.156, 4.193, 4.208], color: COLOR.violet, fill: true }]);
+
+const scatterPriceData = [[35.02,9.8],[28.62,178.4],[33.96,141.6],[9.57,97.1],[25.17,21.2],[19.22,286.1],[38.12,148.5],[24.63,652.1],[34.04,135.1],[28.31,80.1],[22.04,407.0],[37.53,28.6],[27.6,151.8],[24.87,11.4],[42.24,387.2],[39.24,12.4],[19.23,74.7],[33.73,133.2],[34.59,76.7],[22.37,166.1],[28.01,458.1],[7.26,283.1],[27.88,177.4],[43.2,244.5],[10.84,23.0],[33.84,138.8],[7.07,61.7],[15.73,112.1],[22.66,45.5],[2.39,348.1],[38.04,210.2],[31.39,97.2],[4.98,149.3],[41.14,272.0],[34.28,33.6],[37.74,332.5],[23.0,231.7],[38.81,222.0],[24.71,155.0],[30.21,83.1],[6.19,96.4],[34.37,232.7],[20.88,91.2],[36.34,266.8],[30.82,157.4],[43.05,192.7],[19.28,49.1],[28.06,66.5],[33.49,150.0],[7.75,64.2],[25.17,53.9],[31.44,42.8],[5.07,357.3],[43.5,272.5],[33.5,369.9],[6.69,186.5],[27.6,305.6],[26.94,234.7],[24.65,306.5],[36.32,170.6],[39.58,258.6],[8.31,104.4],[16.67,65.6],[34.23,155.8],[10.65,234.2],[33.23,279.9],[33.32,162.2],[26.25,118.3],[29.72,93.6],[34.54,217.5],[10.03,129.0],[15.08,326.0],[27.75,45.8],[26.37,385.7],[44.75,4.0],[33.67,362.2],[14.6,53.9],[24.95,36.9],[45.86,499.1],[45.31,293.4],[22.64,250.9],[21.13,36.9],[11.58,199.1],[25.64,106.0],[26.24,170.5],[41.64,318.2],[19.26,26.1],[28.97,36.1],[38.3,38.1],[37.16,153.1],[23.4,204.7],[25.88,117.1],[34.69,31.6],[30.45,4.9],[32.86,80.4],[40.8,49.2],[27.76,162.6],[35.2,214.6],[35.6,22.5],[28.67,199.9],[40.55,209.2],[32.35,690.7],[26.28,87.3],[12.45,98.8],[29.23,41.4],[44.08,223.3],[9.2,61.1],[11.85,158.8],[45.68,228.9],[32.04,58.1],[25.84,310.5],[9.1,451.8],[26.47,48.9],[39.1,33.9],[21.28,315.3],[6.47,406.0],[12.58,266.3],[29.78,77.2],[27.2,147.2],[10.59,9.4],[33.9,201.6],[36.1,289.5],[20.2,431.5],[35.96,249.5],[24.11,180.1],[9.67,98.8],[38.27,353.4],[35.22,184.4],[50.72,498.3],[33.27,169.5],[29.58,14.5],[33.75,129.9],[23.27,72.4],[6.88,208.4],[10.65,184.3],[32.11,412.4],[20.98,382.0],[32.6,145.4],[19.93,13.9],[29.32,253.5],[30.93,111.0],[39.61,172.8],[13.65,50.8],[40.73,130.3],[26.59,353.6],[44.91,60.0],[13.59,338.6],[37.01,190.7],[32.12,195.4],[21.09,118.2]];
+const scatterMktData = [[3.24,9.8],[2.98,178.4],[3.98,141.6],[1.02,97.1],[2.51,21.2],[1.57,286.1],[4.06,148.5],[2.16,652.1],[3.09,135.1],[2.34,80.1],[2.41,407.0],[3.91,28.6],[2.85,151.8],[2.06,11.4],[3.53,387.2],[4.51,12.4],[2.06,74.7],[3.73,133.2],[3.09,76.7],[2.0,166.1],[2.7,458.1],[0.85,283.1],[2.35,177.4],[4.93,244.5],[0.9,23.0],[3.97,138.8],[0.66,61.7],[1.76,112.1],[2.44,45.5],[0.21,348.1],[3.1,210.2],[3.68,97.2],[0.41,149.3],[3.6,272.0],[3.5,33.6],[3.25,332.5],[2.31,231.7],[4.45,222.0],[2.04,155.0],[2.78,83.1],[0.71,96.4],[3.35,232.7],[2.25,91.2],[3.03,266.8],[3.32,157.4],[3.58,192.7],[1.6,49.1],[2.31,66.5],[3.37,150.0],[0.75,64.2],[2.98,53.9],[2.6,42.8],[0.5,357.3],[4.1,272.5],[3.88,369.9],[0.71,186.5],[2.81,305.6],[2.89,234.7],[2.28,306.5],[3.17,170.6],[4.55,258.6],[0.82,104.4],[1.53,65.6],[3.83,155.8],[1.23,234.2],[3.03,279.9],[3.67,162.2],[2.83,118.3],[2.9,93.6],[3.38,217.5],[0.98,129.0],[1.57,326.0],[2.45,45.8],[2.12,385.7],[4.01,4.0],[3.13,362.2],[1.63,53.9],[2.97,36.9],[3.83,499.1],[4.12,293.4],[2.58,250.9],[2.32,36.9],[1.01,199.1],[2.48,106.0],[2.5,170.5],[3.34,318.2],[1.94,26.1],[2.75,36.1],[3.12,38.1],[4.01,153.1],[2.72,204.7],[2.75,117.1],[3.05,31.6],[2.73,4.9],[3.19,80.4],[4.75,49.2],[2.38,162.6],[2.83,214.6],[2.92,22.5],[2.67,199.9],[4.39,209.2],[2.72,690.7],[2.34,87.3],[1.26,98.8],[2.59,41.4],[4.11,223.3],[0.87,61.1],[0.99,158.8],[3.97,228.9],[3.35,58.1],[3.05,310.5],[0.87,451.8],[2.4,48.9],[4.63,33.9],[2.26,315.3],[0.58,406.0],[1.03,266.3],[2.8,77.2],[2.3,147.2],[1.18,9.4],[3.76,201.6],[3.63,289.5],[2.14,431.5],[3.02,249.5],[2.74,180.1],[0.8,98.8],[3.81,353.4],[3.07,184.4],[4.34,498.3],[3.56,169.5],[3.35,14.5],[3.18,129.9],[2.76,72.4],[0.8,208.4],[0.86,184.3],[2.71,412.4],[2.03,382.0],[3.64,145.4],[1.89,13.9],[3.32,253.5],[2.93,111.0],[4.09,172.8],[1.19,50.8],[4.29,130.3],[2.42,353.6],[5.18,60.0],[1.26,338.6],[3.97,190.7],[3.58,195.4],[2.07,118.2]];
+
+new Chart(document.getElementById('scatterPrice'), {
+  type: 'scatter',
+  data: { datasets: [{ label: 'Records', data: scatterPriceData.map(p => ({x: p[0], y: p[1]})), backgroundColor: COLOR.blue + 'aa', pointRadius: 4 }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+    scales: {
+      x: { title: { display: true, text: 'Unit price ($)', color: '#52514e', font: { size: 12 } }, grid: { color: '#e1e0d9' } },
+      y: { title: { display: true, text: 'Units sold (M)', color: '#52514e', font: { size: 12 } }, grid: { color: '#e1e0d9' } }
+    } }
+});
+
+new Chart(document.getElementById('scatterMkt'), {
+  type: 'scatter',
+  data: { datasets: [{ label: 'Records', data: scatterMktData.map(p => ({x: p[0], y: p[1]})), backgroundColor: COLOR.amber + 'aa', pointRadius: 4 }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+    scales: {
+      x: { title: { display: true, text: 'Marketing spend per unit ($)', color: '#52514e', font: { size: 12 } }, grid: { color: '#e1e0d9' } },
+      y: { title: { display: true, text: 'Units sold (M)', color: '#52514e', font: { size: 12 } }, grid: { color: '#e1e0d9' } }
+    } }
+});
+</script>
+</body>
+</html>
