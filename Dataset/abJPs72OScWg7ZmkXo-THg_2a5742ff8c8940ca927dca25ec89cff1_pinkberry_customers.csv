@@ -1,0 +1,201 @@
+customer_id,name,age,gender,is_married,education,is_employed,workplace,monthly_income
+1,Robin Foster,53,F,True,High School,True,Design Studio,7191
+2,Carl Edwards,33,F,False,Bachelors,True,Law Firm LLC,7444
+3,Joseph Garrison,36,M,True,Masters,True,Consulting Group,11581
+4,Dr. Paul Stanley,35,M,False,High School,True,Marketing Pro,4904
+5,Jay Buchanan,42,M,False,High School,True,Tech Corp,5005
+6,Sean Davies,17,F,False,Some High School,False,,0
+7,Jason White,32,M,True,Masters,False,,0
+8,David Tucker Jr.,34,F,True,Masters,True,Consulting Group,11595
+9,Patrick Blevins,28,M,False,Bachelors,True,Consulting Group,11555
+10,Charles Schwartz,18,F,False,High School,True,City High School,690
+11,Suzanne Hall,24,F,True,Bachelors,False,,0
+12,Suzanne Johnson,37,M,True,PhD,True,Marketing Pro,11892
+13,Elizabeth Clark,38,M,True,Bachelors,True,Finance Inc,4379
+14,Alexander Saunders,15,F,True,Some High School,True,Metro University,508
+15,Elaine White,38,F,False,Bachelors,True,Design Studio,4391
+16,Cristian Williams,19,F,False,High School,False,,0
+17,Matthew Moore,23,M,True,Bachelors,True,Consulting Group,6598
+18,Curtis Weber MD,49,M,True,Bachelors,True,Law Firm LLC,3570
+19,Susan Nolan,28,F,False,Bachelors,True,Design Studio,6493
+20,Erica Hamilton,29,M,False,Bachelors,True,Consulting Group,11858
+21,Nathan Mendez,46,F,True,High School,True,Marketing Pro,3678
+22,Elaine Martin,46,F,False,Bachelors,True,Law Firm LLC,7915
+23,Michelle Forbes,20,F,False,Bachelors,True,Design Studio,3363
+24,Anthony Shepherd,42,M,False,PhD,True,Law Firm LLC,9504
+25,Michael Lopez,27,F,False,Bachelors,True,Tech Corp,6744
+26,Mr. Steven Kennedy,38,M,True,Bachelors,True,Law Firm LLC,5304
+27,Bill Turner,26,M,False,Bachelors,True,Finance Inc,11280
+28,Rachel Morrison,16,M,True,Some High School,False,,0
+29,Michael Harris,47,F,False,Bachelors,True,Design Studio,7172
+30,Kurt Johnson,46,M,False,High School,True,Finance Inc,5255
+31,Cassandra Moran MD,38,F,True,PhD,True,Consulting Group,11125
+32,Ashley Mcgee,47,M,False,Bachelors,True,Consulting Group,4511
+33,David Petersen,50,M,True,Bachelors,True,Consulting Group,2146
+34,Joshua Hardy,47,M,True,Bachelors,True,Law Firm LLC,4919
+35,Katherine Martinez,39,M,False,Bachelors,True,Tech Corp,7369
+36,Catherine Yates,40,F,False,Bachelors,True,Tech Corp,7423
+37,Charles Brown,46,F,False,Bachelors,True,Tech Corp,5170
+38,Anthony Hall,34,F,False,Bachelors,True,Marketing Pro,6682
+39,Sara Garcia,54,F,False,High School,True,Tech Corp,4557
+40,Wanda Castillo,32,M,False,Bachelors,True,Finance Inc,6869
+41,Joseph Moore,50,M,True,Bachelors,True,Consulting Group,3300
+42,Abigail Ward,22,F,True,Bachelors,False,,0
+43,Rachel Waller,36,F,False,Bachelors,True,Consulting Group,10181
+44,Doris Leach,22,F,False,Bachelors,True,Design Studio,6893
+45,Amanda George,47,F,False,Bachelors,True,Finance Inc,6754
+46,Tracy Jones,31,M,True,Bachelors,True,Consulting Group,4565
+47,Jamie Zamora,38,F,False,Bachelors,True,Finance Inc,4606
+48,Kristy Anderson,35,M,False,Bachelors,True,Finance Inc,7394
+49,Donna Jackson MD,45,M,False,High School,False,,0
+50,Felicia Bradley,37,M,False,Bachelors,True,Law Firm LLC,5409
+51,Patricia Johnson,23,M,False,Bachelors,True,Design Studio,7596
+52,Amanda Mills,39,F,False,High School,True,Tech Corp,6131
+53,Jordan Hunt,30,M,True,Masters,True,Tech Corp,5166
+54,Connie Gutierrez,37,M,False,High School,True,Finance Inc,5261
+55,Carolyn Cherry PhD,36,M,True,Bachelors,True,Marketing Pro,7854
+56,Kristen Hughes,47,F,False,Bachelors,False,,0
+57,William Smith,20,F,True,Bachelors,True,Finance Inc,6142
+58,Nathaniel Santiago,30,M,False,Bachelors,True,Design Studio,6752
+59,Mary Brooks,40,M,False,PhD,True,Finance Inc,6838
+60,Veronica Luna,15,M,True,Some High School,True,State College,500
+61,Marie Hale,39,F,False,Masters,True,Law Firm LLC,6070
+62,Emily Garza,43,M,True,Bachelors,True,Marketing Pro,5679
+63,Lauren Thomas,43,M,False,Bachelors,True,Finance Inc,9104
+64,Taylor Adams,19,M,False,High School,False,,0
+65,Rachel Campbell,53,M,False,Bachelors,True,Tech Corp,6452
+66,Andrew Welch,19,M,True,High School,False,,0
+67,David Ellis,33,F,False,Masters,True,Finance Inc,5348
+68,Danielle Johnson,30,F,False,Bachelors,True,Marketing Pro,5546
+69,Anthony George,49,F,False,Bachelors,True,Finance Inc,4738
+70,Stacy Campbell,15,F,True,Some High School,False,,0
+71,Alyssa Bridges,27,M,False,Bachelors,True,Finance Inc,11420
+72,Angela Blackburn,31,F,True,Bachelors,True,Design Studio,5069
+73,Carl Swanson,18,M,False,High School,False,,0
+74,Todd Hayes,50,M,False,Masters,True,Finance Inc,2675
+75,Dennis Davis,49,M,False,Bachelors,False,,0
+76,Natalie Rose,38,F,False,Bachelors,True,Design Studio,5766
+77,Susan Martinez,44,M,True,Masters,True,Design Studio,3365
+78,Jason Smith,50,M,False,Masters,True,Consulting Group,6171
+79,Jacqueline Duke,45,M,False,Bachelors,True,Finance Inc,6980
+80,Christopher Bryant,35,F,False,Bachelors,True,Finance Inc,4156
+81,Wayne Cohen,28,F,False,Bachelors,True,Consulting Group,9334
+82,Victor Wagner,26,F,False,Masters,False,,0
+83,Christopher Ho,54,M,False,Masters,True,Consulting Group,4681
+84,Melanie Lynch,52,M,False,Bachelors,False,,0
+85,Patricia Edwards,21,M,True,Bachelors,False,,0
+86,Shelia Delgado,53,M,True,Masters,True,Consulting Group,6134
+87,Karen Dennis,42,M,False,Masters,True,Finance Inc,4455
+88,Matthew Cooper,15,M,False,Some High School,False,,0
+89,Tyler Mills,39,F,False,Masters,True,Marketing Pro,5627
+90,Albert Vega,35,M,False,PhD,True,Design Studio,6811
+91,Brittany Garcia,34,F,False,Bachelors,True,Finance Inc,7376
+92,Shannon Cooper,17,M,True,Some High School,False,,0
+93,Edwin James,46,M,True,Bachelors,True,Tech Corp,2667
+94,Cody Best,50,M,False,Bachelors,True,Design Studio,2539
+95,Anne Simpson,41,F,True,Bachelors,True,Consulting Group,4508
+96,Raymond Weaver,49,F,False,Masters,False,,0
+97,Nicholas Johnson,16,F,True,Some High School,True,State College,785
+98,Veronica Harrison,47,M,False,Bachelors,True,Design Studio,7358
+99,Chelsea Gonzalez,39,M,False,Masters,False,,0
+100,Cesar Daniel,15,F,False,Some High School,True,Central High,810
+101,Tiffany Best,45,F,False,Bachelors,False,,0
+102,Stephanie Wright,33,M,True,Bachelors,True,Finance Inc,9997
+103,Lisa Reeves,18,F,False,High School,False,,0
+104,Susan Reed,42,F,False,Bachelors,True,Design Studio,4249
+105,Heidi Tate,26,F,False,High School,False,,0
+106,Katrina Alvarado,37,F,False,Bachelors,True,Design Studio,6530
+107,Virginia Merritt,48,M,False,Bachelors,True,Finance Inc,3358
+108,Chris Frank,52,F,False,Masters,True,Marketing Pro,6637
+109,Sandra Mendoza,19,M,False,High School,False,,0
+110,William Roberts,31,F,True,Bachelors,True,Law Firm LLC,6593
+111,Benjamin Wolfe,25,F,False,Bachelors,True,Consulting Group,11350
+112,Brent Graham,30,F,False,Bachelors,True,Finance Inc,5266
+113,Amy Patterson,46,M,True,High School,True,Design Studio,7124
+114,Suzanne White,36,M,False,Bachelors,True,Finance Inc,10376
+115,Stephanie Rivera,28,F,False,Bachelors,True,Law Firm LLC,10937
+116,Rachel Taylor,44,M,False,Bachelors,True,Tech Corp,8432
+117,Ashley Riley,49,F,True,Bachelors,True,Consulting Group,2638
+118,Elijah Drake,42,M,True,Bachelors,True,Marketing Pro,4364
+119,Frederick Jones,21,M,False,Masters,True,Marketing Pro,7870
+120,Cathy Clark,52,M,True,Bachelors,True,Law Firm LLC,7750
+121,Alexander Santiago,31,M,True,Bachelors,True,Consulting Group,10955
+122,Regina Reyes,39,F,False,Bachelors,True,Law Firm LLC,4158
+123,John Flowers,22,M,False,Bachelors,True,Marketing Pro,4472
+124,Jeffery Taylor,48,F,True,Bachelors,True,Tech Corp,5812
+125,Monica Chan,35,F,True,Bachelors,True,Marketing Pro,6563
+126,Lauren Taylor,44,M,True,Masters,True,Finance Inc,8854
+127,Kevin Barber,51,M,False,High School,False,,0
+128,Jill Walker,18,M,True,High School,True,State College,617
+129,Anthony Hammond,16,F,True,Some High School,False,,0
+130,Donna Wright,19,F,True,High School,True,Business School,617
+131,Dr. Dana Smith DDS,34,F,True,Bachelors,True,Design Studio,10233
+132,Jodi Adams,25,M,True,Bachelors,True,Marketing Pro,2901
+133,Sarah Freeman,37,F,True,Bachelors,True,Consulting Group,9287
+134,Kimberly Jones,51,M,False,High School,True,Consulting Group,4958
+135,Jodi Turner,44,F,True,Masters,True,Marketing Pro,8027
+136,Zachary Forbes,25,F,True,High School,True,Tech Corp,7415
+137,Kelli Chen,43,F,False,Masters,True,Consulting Group,10413
+138,Diane Shaffer,51,F,True,Bachelors,False,,0
+139,Kelsey Flores,39,F,False,Bachelors,True,Tech Corp,5762
+140,Raven Cook,29,M,False,Bachelors,True,Tech Corp,7054
+141,Sydney Wagner,54,F,False,Bachelors,True,Tech Corp,2197
+142,Dennis Mccullough,22,F,False,High School,True,Tech Corp,7742
+143,Raymond Strickland,53,F,False,Masters,True,Marketing Pro,3120
+144,Martin Johnson,47,F,True,Bachelors,True,Law Firm LLC,6612
+145,Mark Leon,52,M,True,Bachelors,True,Law Firm LLC,7996
+146,Brandon Friedman,43,F,False,Bachelors,True,Design Studio,6371
+147,Marcus Martinez,45,M,True,Bachelors,True,Design Studio,4793
+148,Carrie Jones,25,M,False,Bachelors,True,Law Firm LLC,2814
+149,Steven Payne,40,M,False,Bachelors,True,Tech Corp,4984
+150,Daniel Hunt,26,F,False,PhD,True,Tech Corp,11300
+151,Andrea Nelson MD,42,F,False,Bachelors,True,Finance Inc,8146
+152,Erin Garcia,36,F,True,Bachelors,True,Law Firm LLC,5417
+153,Earl Terrell,15,F,False,Some High School,False,,0
+154,Roberta Martinez,35,F,True,Masters,True,Consulting Group,4201
+155,Joseph Hunt,49,F,False,Bachelors,True,Consulting Group,4122
+156,Chad Johnson,41,F,True,Bachelors,True,Law Firm LLC,6971
+157,Lisa Frazier,39,M,False,Bachelors,True,Marketing Pro,9975
+158,Wendy Gallagher,36,M,False,Bachelors,True,Law Firm LLC,7120
+159,Justin Hobbs,34,M,True,Bachelors,True,Law Firm LLC,5724
+160,Theresa Jenkins,46,F,True,Bachelors,True,Marketing Pro,2951
+161,Caitlin Chen,43,M,False,Masters,True,Marketing Pro,4065
+162,Thomas Henry,16,F,False,Some High School,False,,0
+163,Angela Morgan,18,M,False,High School,True,State College,912
+164,Brett Montes,24,F,False,Bachelors,True,Finance Inc,5451
+165,Andrew Allen,46,F,True,Bachelors,True,Design Studio,2832
+166,Christopher Harris,37,F,False,High School,True,Marketing Pro,5310
+167,Jennifer Brown,42,F,False,Bachelors,True,Design Studio,6143
+168,Jacob Miller,30,M,True,Masters,True,Finance Inc,10612
+169,Rhonda Rivera,32,F,True,Bachelors,True,Law Firm LLC,6198
+170,Shane Tucker,33,F,False,Bachelors,True,Tech Corp,4513
+171,Angela Phillips,25,M,False,Bachelors,True,Marketing Pro,8566
+172,Lauren Paul,51,M,False,Bachelors,True,Finance Inc,7172
+173,Gerald Garza,36,F,False,Bachelors,True,Law Firm LLC,4106
+174,Robert Vasquez,31,F,False,Bachelors,True,Marketing Pro,8616
+175,Kathleen Klein,53,F,False,Bachelors,True,Consulting Group,4541
+176,Jennifer Mora,48,M,False,High School,True,Consulting Group,4175
+177,Raymond Terrell,52,F,True,Bachelors,True,Law Firm LLC,7497
+178,Sophia Dominguez,36,F,True,PhD,True,Law Firm LLC,4645
+179,Billy Hayden,21,M,False,Masters,True,Design Studio,5028
+180,Kathy Thomas,16,M,True,Some High School,True,City High School,862
+181,Kelly Morgan,40,M,False,Masters,True,Law Firm LLC,6058
+182,William Sullivan,53,F,False,Masters,True,Design Studio,6150
+183,Kayla Turner,19,M,False,High School,False,,0
+184,Henry Mckee,33,F,True,Bachelors,True,Law Firm LLC,11101
+185,Audrey Clark,23,F,False,High School,True,Finance Inc,4343
+186,Rachel White,54,M,True,Bachelors,True,Design Studio,6226
+187,Shannon Johnson,44,M,False,Bachelors,True,Finance Inc,5636
+188,Johnny Kent,31,F,False,High School,True,Marketing Pro,3341
+189,Shelley Sanders,45,F,False,Bachelors,True,Law Firm LLC,2709
+190,Rachel Payne,26,M,False,PhD,True,Marketing Pro,9657
+191,Geoffrey Stone,21,M,True,Bachelors,False,,0
+192,Sherri Cruz,29,M,False,Masters,True,Consulting Group,3521
+193,Martin Herrera,45,F,True,Bachelors,False,,0
+194,Mr. Derek Johnson,45,M,False,Bachelors,True,Tech Corp,11980
+195,James Stout,54,M,False,Bachelors,True,Consulting Group,2038
+196,Joseph Campbell,43,F,True,Bachelors,True,Marketing Pro,2492
+197,Michael Rodriguez,49,F,False,High School,False,,0
+198,Taylor Harris,46,M,True,High School,False,,0
+199,Daniel Gardner,43,F,False,Bachelors,True,Law Firm LLC,4271
+200,Matthew Haley,24,F,True,Bachelors,True,Marketing Pro,6435
